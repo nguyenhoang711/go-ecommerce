@@ -1,7 +1,8 @@
 server:
   port: 8002
+  mode: "dev"
 mysql:
-  host: 127.0.0.1
+  host: mysql_ecom_container #127.0.0.1
   port: 3306
   username: root
   password: 123456
@@ -18,7 +19,7 @@ logger:
   max_age: 28
   compress: true
 redis:
-  host: 127.0.0.1
+  host: redis_ecom_container #127.0.0.1
   port: 6379
   password:
   database: 0

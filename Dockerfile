@@ -6,12 +6,12 @@ COPY . .
 
 RUN go mod download
 
-RUN go build -o crm.shopdev.com ./cmd/demosqlc
+RUN go build -o dev.shoppenguin.com ./cmd/ecommerce
 
 FROM scratch
 
 COPY ./configs /configs
 
-COPY --from=builder /build/crm.shopdev.com /
+COPY --from=builder /build/dev.shoppenguin.com /
 
-ENTRYPOINT [ "/crm.shopdev.com", "configs/local.yaml" ]
+ENTRYPOINT [ "/dev.shoppenguin.com", "configs/local.yaml" ]
