@@ -6,6 +6,12 @@ GOOSE_DRIVER ?= mysql
 GOOSE_DBSTRING ?= "root:123456@tcp(127.0.0.1:3306)/ecom_shop"
 GOOSE_MIGRATION_DIR ?= sql/schema
 
+gen-proto:
+	cd proto && sh gen.sh
+	
+gen-swagger:
+	swag init -g ./cmd/ecommerce/main.go -o ./cmd/swag/docs
+
 docker-build:
 	docker-compose up --build
 
