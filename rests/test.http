@@ -1,2 +1,5 @@
 ### healthcheck
 GET http://localhost:8008/v1/2024/ping
+
+### health check
+GET http://localhost:8002/health-check

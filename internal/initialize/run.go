@@ -1,10 +1,20 @@
 package initialize
 
-import "github.com/gin-gonic/gin"
+import (
+	"log"
+	"os"
+
+	"github.com/gin-gonic/gin"
+)
 
 func Run() *gin.Engine{
-
-	LoadConfig()
+	env := os.Getenv("ENV")
+	if env == "" {
+        log.Fatal("ENV variable is not set")
+		LoadConfig("local")
+    } else {
+		LoadConfig(env)
+	}
 	InitLogger()
 
 	InitMysqlc()

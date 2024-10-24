@@ -10,8 +10,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func LoadConfig() {
-	yamlFile, err := os.ReadFile("./configs/local.yaml")
+func LoadConfig(env string) {
+	yamlFile, err := os.ReadFile(fmt.Sprintf("./configs/%s.yaml", env))
 	if err != nil {
         log.Fatalf("Error reading YAML file:: %v", err)
     }
@@ -23,4 +23,5 @@ func LoadConfig() {
 	}
 	// read server configuration
 	fmt.Println("Server port::", strconv.Itoa(global.Config.Server.Port))
+	fmt.Println("MODE::", global.Config.Server.Mode)
 }
