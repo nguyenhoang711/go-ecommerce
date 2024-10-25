@@ -1,0 +1,30 @@
+syntax = "proto3";
+option go_package = "internal/vo";
+
+enum CMS_TYPE_ID
+{
+  _UN_USE = 0;
+  REGISTER_USER = 1; // dang ky tai khoan
+  PING = 2; // PING TO SERVER
+}
+
+enum CMS_GROUP_ID
+{
+  _CMS_GROUP_UNUSE = 0;
+  USER = 1;
+  SYST = 2;
+}
+
+enum API_TYPE{
+  PORTAL = 0;
+  APP = 1;
+}
+
+message BannerResponse
+{
+  int32 id = 1;
+  string title_name = 2;
+  string image_url = 3;
+  int32 status = 4;  // 1 // lưu nháp 2 // chờ duyệt 3 // đã hoạt động 4 // hủy bỏ
+  uint32 position = 8;
+}

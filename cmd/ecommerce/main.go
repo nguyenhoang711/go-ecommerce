@@ -20,7 +20,6 @@ import (
 // @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host      localhost:8002
-// @BasePath  /v1/2024
 // @schema http
 func main() {
 	r := initialize.Run()

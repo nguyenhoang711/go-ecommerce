@@ -19,9 +19,9 @@ func Run() *gin.Engine{
 
 	InitMysqlc()
 	InitRedis()
+	InitServiceInterface()
 
 	r := InitRouter()
-	// r.GET("../../docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	return r
 }

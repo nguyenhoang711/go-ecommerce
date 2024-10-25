@@ -1,0 +1,15 @@
+syntax = "proto3";
+option go_package = "internal/vo";
+
+
+message CMSPing
+{
+  message Request{
+    string hello = 1;// @gotags: form:"hello"
+  }
+  message Reply
+  {
+    string port = 1;
+    string mode = 2;
+  }
+}

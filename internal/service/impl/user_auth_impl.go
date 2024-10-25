@@ -22,6 +22,7 @@ func (s *sUserAuth) Login(ctx context.Context) error {
 }
 
 func (s *sUserAuth) Register(ctx context.Context) error {
+	
 	return nil
 }
 

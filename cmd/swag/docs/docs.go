@@ -23,14 +23,71 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/syst/system-info": {
+            "post": {
+                "description": "Lấy về thông tin cơ bản của server , như giờ hệ thống , tên server , version hiện tại của hệ thống",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "INFO"
+                ],
+                "summary": "cms Server info",
+                "parameters": [
+                    {
+                        "description": "info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.CMSPing_Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/vo.CMSPing_Reply"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "vo.CMSPing_Reply": {
+            "type": "object",
+            "properties": {
+                "mode": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string"
+                }
+            }
+        },
+        "vo.CMSPing_Request": {
+            "type": "object",
+            "properties": {
+                "hello": {
+                    "description": "@gotags: form:\"hello\"",
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0.0",
 	Host:             "localhost:8002",
-	BasePath:         "/v1/2024",
+	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "Swagger GO Ecommerce API",
 	Description:      "This is a sample server celler server.",

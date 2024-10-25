@@ -1,0 +1,19 @@
+syntax = "proto3";
+option go_package = "internal/vo";
+
+message RegisterUser
+{
+    message Request
+    {
+        string verify_key = 1; // @gotags: form:"verify_key"
+        string verify_type = 2; // @gotags: form:"verify_type"
+        string verify_purpose = 3; // @gotags: form:"verify_purpose"
+    }
+    message Reply
+    {
+        
+    }
+    enum ERROR {
+        NO_ERROR = 0;
+    }
+}

@@ -7,6 +7,6 @@ protoc --go_out=../ *.proto
 #go install github.com/favadi/protoc-go-inject-tag@latest
 cd ../internal/vo
 export PATH="$PATH:$(go env GOPATH)/bin"
-protoc-go-inject-tag -input=./*.pb.go
+# protoc-go-inject-tag -input=./*.pb.go
 
 #window: protoc-go-inject-tag -input="*.pb.go" -remove_tag_comment

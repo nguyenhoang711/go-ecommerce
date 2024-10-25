@@ -11,6 +11,7 @@ func InitServiceInterface() {
 	queries := repos.New(global.Mdb)
 
 	service.InitUserAuth(impl.NewUserAuthImpl(queries))
+	service.InitSystemAPI(impl.NewSystemAPIImpl())
 
 	global.Logger.Info("Init all service interface success!")
 }

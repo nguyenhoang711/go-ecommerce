@@ -1,4 +1,17 @@
-basePath: /v1/2024
+definitions:
+  vo.CMSPing_Reply:
+    properties:
+      mode:
+        type: string
+      port:
+        type: string
+    type: object
+  vo.CMSPing_Request:
+    properties:
+      hello:
+        description: '@gotags: form:"hello"'
+        type: string
+    type: object
 host: localhost:8002
 info:
   contact:
@@ -12,5 +25,28 @@ info:
   termsOfService: github.com/devpenguin/ecommerce
   title: Swagger GO Ecommerce API
   version: 1.0.0
-paths: {}
+paths:
+  /syst/system-info:
+    post:
+      consumes:
+      - application/json
+      description: Lấy về thông tin cơ bản của server , như giờ hệ thống , tên server
+        , version hiện tại của hệ thống
+      parameters:
+      - description: info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/vo.CMSPing_Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/vo.CMSPing_Reply'
+      summary: cms Server info
+      tags:
+      - INFO
 swagger: "2.0"

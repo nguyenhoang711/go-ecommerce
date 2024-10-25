@@ -16,6 +16,62 @@
         "version": "1.0.0"
     },
     "host": "localhost:8002",
-    "basePath": "/v1/2024",
-    "paths": {}
+    "paths": {
+        "/syst/system-info": {
+            "post": {
+                "description": "Lấy về thông tin cơ bản của server , như giờ hệ thống , tên server , version hiện tại của hệ thống",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "INFO"
+                ],
+                "summary": "cms Server info",
+                "parameters": [
+                    {
+                        "description": "info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.CMSPing_Request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/vo.CMSPing_Reply"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "vo.CMSPing_Reply": {
+            "type": "object",
+            "properties": {
+                "mode": {
+                    "type": "string"
+                },
+                "port": {
+                    "type": "string"
+                }
+            }
+        },
+        "vo.CMSPing_Request": {
+            "type": "object",
+            "properties": {
+                "hello": {
+                    "description": "@gotags: form:\"hello\"",
+                    "type": "string"
+                }
+            }
+        }
+    }
 }
