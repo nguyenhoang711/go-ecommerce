@@ -16,7 +16,7 @@ func NewSystemAPIImpl() *sSystemAPI {
 }
 
 // implement ISystemAPI interface here
-func (s *sSystemAPI) CMS_PING(ctx context.Context, in *vo.CMSPing_Request) (int, interface{}, error) {
+func (s *sSystemAPI) CMS_PING(ctx context.Context, in *vo.CMSPing_Request) (int, *vo.CMSPing_Reply, error) {
 	global.Logger.Info(in.Hello)
 	reply := vo.CMSPing_Reply{}
 	reply.Port = strconv.Itoa(global.Config.Server.Port)

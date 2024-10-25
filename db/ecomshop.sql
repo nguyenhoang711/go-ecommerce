@@ -1,7 +1,7 @@
--- +goose Up
--- +goose StatementBegin
-
--- +goose StatementEnd
+-- -------------------------------------
+-- Table structure for ecom_user
+-- -------------------------------------
+DROP TABLE IF EXISTS `ecom_user`;
 CREATE TABLE IF NOT EXISTS `ecom_user` (
    `usr_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Account ID',
    `usr_email` varchar(30) NOT NULL DEFAULT '' COMMENT 'Email',
@@ -20,7 +20,21 @@ CREATE TABLE IF NOT EXISTS `ecom_user` (
    KEY `idx_phone` (`usr_phone`),
    KEY `idx_username` (`usr_username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Account';
--- +goose Down
--- +goose StatementBegin
-DROP TABLE IF EXISTS `ecom_user`;
--- +goose StatementEnd
+-- -------------------------------------
+-- Table structure for pre_go_acc_user_verify_9999
+-- -------------------------------------
+DROP TABLE IF EXISTS `pre_go_acc_user_verify_9999`;
+CREATE TABLE IF NOT EXISTS `pre_go_acc_user_verify_9999` (
+  `verify_id` int NOT NULL AUTO_INCREMENT,
+  `verify_otp` varchar(6) NOT NULL,
+  `verify_key` varchar(255) NOT NULL,
+  `verify_key_hash` varchar(255) NOT NULL,
+  `verify_type` int DEFAULT '1',
+  `is_verified` int DEFAULT '0',
+  `is_deleted` int DEFAULT '0',
+  `verify_created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `verify_updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`verify_id`),
+  UNIQUE KEY `unique_verify_key` (`verify_key`),
+  KEY `idx_verify_otp` (`verify_otp`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='account_user_verify';

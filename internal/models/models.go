@@ -4,6 +4,10 @@
 
 package repos
 
+import (
+	"database/sql"
+)
+
 // Account
 type EcomUser struct {
 	// Account ID
@@ -30,4 +34,17 @@ type EcomUser struct {
 	UsrLoginTimes int32
 	// Status 1:enable, 0:disable, -1: deleted
 	UsrStatus bool
+}
+
+// account_user_verify
+type PreGoAccUserVerify9999 struct {
+	VerifyID        int32
+	VerifyOtp       string
+	VerifyKey       string
+	VerifyKeyHash   string
+	VerifyType      sql.NullInt32
+	IsVerified      sql.NullInt32
+	IsDeleted       sql.NullInt32
+	VerifyCreatedAt sql.NullTime
+	VerifyUpdatedAt sql.NullTime
 }

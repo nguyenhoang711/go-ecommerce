@@ -28,6 +28,14 @@ dev:
 	@echo "Running with environment: $(ENV)"
 	ENV=$(ENV) go run ./cmd/ecommerce
 
+# add one table to database
+up_by_one:
+	@GOOSE_DRIVER=$(GOOSE_DRIVER) GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_MIGRATION_DIR) up-by-one
+	
+# create a new migration
+create-migration:
+	@goose -dir=$(GOOSE_MIGRATION_DIR) create $(name) sql
+
 up-gen:
 	@GOOSE_DRIVER=$(GOOSE_DRIVER) GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_MIGRATION_DIR) up
 
@@ -37,6 +45,6 @@ down-gen:
 reset-gen:
 	@GOOSE_DRIVER=$(GOOSE_DRIVER) GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_MIGRATION_DIR) reset
 
-sqlcgen:
+sqlgen:
 	sqlc generate
 

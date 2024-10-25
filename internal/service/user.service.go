@@ -2,12 +2,14 @@ package service
 
 import (
 	"context"
+
+	"github.com/devpenguin/go-ecommerce/internal/vo"
 )
 
 type (
 	IUserAuth interface {
 		Login(ctx context.Context) error
-		Register(ctx context.Context) error
+		Register(ctx context.Context, in *vo.RegisterUser_Request) (int, vo.RegisterUser_Reply, error)
 		VerifyOTP(ctx context.Context) error
 		UpdatePasswordRegister(ctx context.Context) error
 	}

@@ -8,7 +8,7 @@ import (
 
 type (
 	ISystemAPI interface {
-		CMS_PING(ctx context.Context, in *vo.CMSPing_Request) (codeResult int, data interface{}, err error)
+		CMS_PING(ctx context.Context, in *vo.CMSPing_Request) (int, *vo.CMSPing_Reply, error)
 	}
 )
 
