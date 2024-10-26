@@ -7,7 +7,7 @@ mysql:
   username: root
   password: 123456
   # password: HaUINumber1
-  dbname: dev_go #shopdevgo
+  dbname: ecom_shop #shopdevgo
   maxIdleConns: 10
   maxOpenConns: 50
   connMaxLifeTime: 3600

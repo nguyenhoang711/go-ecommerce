@@ -3,3 +3,13 @@ GET http://localhost:8008/v1/2024/ping
 
 ### health check
 POST http://localhost:8002/syst/system-info
+
+### health check
+POST http://localhost:8002/auth/register
+Content-Type: application/json
+
+{
+    "verify_key": "penguinnguyen117@gmail.com",
+    "verify_purpose": "TEST_USER",
+    "verify_type": 1
+}

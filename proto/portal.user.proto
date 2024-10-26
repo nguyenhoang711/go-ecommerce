@@ -6,7 +6,7 @@ message RegisterUser
     message Request
     {
         string verify_key = 1; // @gotags: form:"verify_key"
-        string verify_type = 2; // @gotags: form:"verify_type"
+        int32 verify_type = 2; // @gotags: form:"verify_type"
         string verify_purpose = 3; // @gotags: form:"verify_purpose"
     }
     message Reply
@@ -15,5 +15,9 @@ message RegisterUser
     }
     enum ERROR {
         NO_ERROR = 0;
+        USER_EXISTED = 1;
+        INVALID_OTP = 2;
+        OTP_NOT_EXISTS = 3;
+        SEND_OTP_ERRROR = 4;
     }
 }

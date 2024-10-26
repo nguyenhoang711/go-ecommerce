@@ -3,6 +3,7 @@ package initialize
 import (
 	"net/http"
 
+	"github.com/devpenguin/go-ecommerce/internal/controller/auth"
 	"github.com/devpenguin/go-ecommerce/internal/controller/syst"
 	"github.com/gin-gonic/gin"
 )
@@ -15,6 +16,11 @@ func InitRouter() *gin.Engine {
 	{
 		v1.GET("/ping", Pong)          // /v1/2024/ping
 		v1.POST("/system-info", syst.SystemAPI.Ping)
+	}
+
+	authAPI := r.Group("/auth")
+	{
+		authAPI.POST("/register", auth.UserAuth.Register)
 	}
 
 	return r
