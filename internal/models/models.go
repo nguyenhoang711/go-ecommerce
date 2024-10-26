@@ -8,32 +8,45 @@ import (
 	"database/sql"
 )
 
-// Account
-type EcomUser struct {
-	// Account ID
-	UsrID uint32
-	// Email
-	UsrEmail string
-	// Phone Number
-	UsrPhone string
-	// Username
-	UsrUsername string
-	// Password
-	UsrPassword string
-	// Creation Time
-	UsrCreatedAt int32
-	// Update Time
-	UsrUpdatedAt int32
-	// Creation IP
-	UsrCreateIpAt string
-	// Last Login IP
-	UsrLastLoginIpAt string
-	// Last Login Time
-	UsrLastLoginAt int32
-	// Login Times
-	UsrLoginTimes int32
-	// Status 1:enable, 0:disable, -1: deleted
-	UsrStatus bool
+// pre_go_acc_user
+type PreGoAccUser9999 struct {
+	// User ID
+	UserID uint64
+	// User account
+	UserAccount string
+	// User nickname
+	UserNickname sql.NullString
+	// User avatar
+	UserAvatar sql.NullString
+	// User state: 0-Locked, 1-Activated, 2-Not Activated
+	UserState uint8
+	// Mobile phone number
+	UserMobile sql.NullString
+	// User gender: 0-Secret, 1-Male, 2-Female
+	UserGender sql.NullInt16
+	// User birthday
+	UserBirthday sql.NullTime
+	// User email address
+	UserEmail sql.NullString
+	// Authentication status: 0-Not Authenticated
+	UserIsAuthentication uint8
+	// Record creation time
+	CreatedAt sql.NullTime
+	// Record update time
+	UpdatedAt sql.NullTime
+}
+
+// pre_go_acc_user_base
+type PreGoAccUserBase9999 struct {
+	UserID         int32
+	UserAccount    string
+	UserPassword   string
+	UserSalt       string
+	UserLoginTime  sql.NullTime
+	UserLogoutTime sql.NullTime
+	UserLoginIp    sql.NullString
+	UserCreatedAt  sql.NullTime
+	UserUpdatedAt  sql.NullTime
 }
 
 // account_user_verify

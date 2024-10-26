@@ -1,25 +1,44 @@
 -- -------------------------------------
--- Table structure for ecom_user
+-- Table structure for pre_go_acc_user_9999
 -- -------------------------------------
-DROP TABLE IF EXISTS `ecom_user`;
-CREATE TABLE IF NOT EXISTS `ecom_user` (
-   `usr_id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'Account ID',
-   `usr_email` varchar(30) NOT NULL DEFAULT '' COMMENT 'Email',
-   `usr_phone` varchar(15) NOT NULL DEFAULT '' COMMENT 'Phone Number',
-   `usr_username` varchar(30) NOT NULL DEFAULT '' COMMENT 'Username',
-   `usr_password` varchar(64) NOT NULL DEFAULT '' COMMENT 'Password',
-   `usr_created_at` int(11) NOT NULL DEFAULT '0' COMMENT 'Creation Time',
-   `usr_updated_at` int(11) NOT NULL DEFAULT '0' COMMENT 'Update Time',
-   `usr_create_ip_at` varchar(12) NOT NULL DEFAULT '' COMMENT 'Creation IP',
-   `usr_last_login_ip_at` varchar(12) NOT NULL DEFAULT '' COMMENT 'Last Login IP',
-   `usr_last_login_at` int(11) NOT NULL DEFAULT '0' COMMENT 'Last Login Time',
-   `usr_login_times` int(11) NOT NULL DEFAULT '0' COMMENT 'Login Times',
-   `usr_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Status 1:enable, 0:disable, -1: deleted',
-   PRIMARY KEY (`usr_id`),
-   KEY `idx_email` (`usr_email`),
-   KEY `idx_phone` (`usr_phone`),
-   KEY `idx_username` (`usr_username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Account';
+DROP TABLE IF EXISTS `pre_go_acc_user_9999`;
+CREATE TABLE `pre_go_acc_user_9999` (
+  `user_id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT 'User ID',
+  `user_account` varchar(255) NOT NULL COMMENT 'User account',
+  `user_nickname` varchar(255) DEFAULT NULL COMMENT 'User nickname',
+  `user_avatar` varchar(255) DEFAULT NULL COMMENT 'User avatar',
+  `user_state` tinyint unsigned NOT NULL COMMENT 'User state: 0-Locked, 1-Activated, 2-Not Activated',
+  `user_mobile` varchar(20) DEFAULT NULL COMMENT 'Mobile phone number',
+  `user_gender` tinyint unsigned DEFAULT NULL COMMENT 'User gender: 0-Secret, 1-Male, 2-Female',
+  `user_birthday` date DEFAULT NULL COMMENT 'User birthday',
+  `user_email` varchar(255) DEFAULT NULL COMMENT 'User email address',
+  `user_is_authentication` tinyint unsigned NOT NULL COMMENT 'Authentication status: 0-Not Authenticated',
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Record creation time',
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Record update time',
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `unique_user_account` (`user_account`),
+  KEY `idx_user_mobile` (`user_mobile`),
+  KEY `idx_user_email` (`user_email`),
+  KEY `idx_user_state` (`user_state`),
+  KEY `idx_user_is_authentication` (`user_is_authentication`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='pre_go_acc_user';
+-- -------------------------------------
+-- Table structure for pre_go_acc_user_base_9999
+-- -------------------------------------
+DROP TABLE IF EXISTS `pre_go_acc_user_base_9999`;
+CREATE TABLE `pre_go_acc_user_base_9999` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `user_account` varchar(255) NOT NULL,
+  `user_password` varchar(255) NOT NULL,
+  `user_salt` varchar(255) NOT NULL,
+  `user_login_time` timestamp NULL DEFAULT NULL,
+  `user_logout_time` timestamp NULL DEFAULT NULL,
+  `user_login_ip` varchar(45) NULL DEFAULT NULL,
+  `user_created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `unique_user_account` (`user_account`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='pre_go_acc_user_base';
 -- -------------------------------------
 -- Table structure for pre_go_acc_user_verify_9999
 -- -------------------------------------
