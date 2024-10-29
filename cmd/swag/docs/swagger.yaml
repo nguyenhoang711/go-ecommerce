@@ -1,4 +1,24 @@
 definitions:
+  response.ErrorResponseData:
+    properties:
+      code:
+        description: status code
+        type: integer
+      detail:
+        description: du lai return
+      error:
+        description: thong bao loi
+        type: string
+    type: object
+  response.ResponseData:
+    properties:
+      code:
+        description: status code
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
   vo.CMSPing_Reply:
     properties:
       mode:
@@ -10,6 +30,13 @@ definitions:
     properties:
       hello:
         description: '@gotags: form:"hello"'
+        type: string
+    type: object
+  vo.VerifyInput:
+    properties:
+      verify_code:
+        type: string
+      verify_key:
         type: string
     type: object
 host: localhost:8002
@@ -26,6 +53,32 @@ info:
   title: Swagger GO Ecommerce API
   version: 1.0.0
 paths:
+  /auth/verify_account:
+    post:
+      consumes:
+      - application/json
+      description: When user is registered send otp to email
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/vo.VerifyInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponseData'
+      summary: auth user verify otp
+      tags:
+      - auth user management
   /syst/system-info:
     post:
       consumes:

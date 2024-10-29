@@ -24,6 +24,46 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/auth/verify_account": {
+            "post": {
+                "description": "When user is registered send otp to email",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth user management"
+                ],
+                "summary": "auth user verify otp",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.VerifyInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ResponseData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponseData"
+                        }
+                    }
+                }
+            }
+        },
         "/syst/system-info": {
             "post": {
                 "description": "Lấy về thông tin cơ bản của server , như giờ hệ thống , tên server , version hiện tại của hệ thống",
@@ -60,6 +100,35 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "response.ErrorResponseData": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "status code",
+                    "type": "integer"
+                },
+                "detail": {
+                    "description": "du lai return"
+                },
+                "error": {
+                    "description": "thong bao loi",
+                    "type": "string"
+                }
+            }
+        },
+        "response.ResponseData": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "status code",
+                    "type": "integer"
+                },
+                "data": {},
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "vo.CMSPing_Reply": {
             "type": "object",
             "properties": {
@@ -76,6 +145,17 @@ const docTemplate = `{
             "properties": {
                 "hello": {
                     "description": "@gotags: form:\"hello\"",
+                    "type": "string"
+                }
+            }
+        },
+        "vo.VerifyInput": {
+            "type": "object",
+            "properties": {
+                "verify_code": {
+                    "type": "string"
+                },
+                "verify_key": {
                     "type": "string"
                 }
             }

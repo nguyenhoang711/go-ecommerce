@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/devpenguin/go-ecommerce/global"
@@ -104,8 +105,33 @@ func (s *sUserAuth) Register(ctx context.Context, in *vo.RegisterUser_Request) (
 	return int32(vo.RegisterUser_NO_ERROR), nil, nil
 }
 
-func (s *sUserAuth) VerifyOTP(ctx context.Context) error {
-	return nil
+func (s *sUserAuth) VerifyOTP(ctx context.Context, in *vo.VerifyInput) (out vo.VerifyOTPOutput, err error) {
+	//check hashKey exist in db
+	hashKey := crypto.GetHash(strings.ToLower(in.VerifyKey))
+
+	//get OTP
+	otpFound, err := global.Rdb.Get(ctx, utils.GetUserKey(hashKey)).Result()
+	if err != nil {
+		return out, err
+	}
+	if in.VerifyCode != otpFound {
+		// neu sai qua 3 lan trong vong 1 phut
+		return out, fmt.Errorf("OTP not match")
+	}
+	infoOTP, err := s.repo.GetInfoOTP(ctx, hashKey)
+	if err != nil {
+		return out, err
+	}
+	// update status to verified
+	err = s.repo.UpdateUserVerificationStatus(ctx, hashKey)
+	if err != nil {
+		return out, err
+	}
+
+	//output
+	out.Token = infoOTP.VerifyKeyHash
+	out.Message = "OTP verify success"
+	return out, err
 }
 
 func (s *sUserAuth) UpdatePasswordRegister(ctx context.Context) error {

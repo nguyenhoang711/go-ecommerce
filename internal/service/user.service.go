@@ -10,7 +10,7 @@ type (
 	IUserAuth interface {
 		Login(ctx context.Context) error
 		Register(ctx context.Context, in *vo.RegisterUser_Request) (int32, interface{}, error)
-		VerifyOTP(ctx context.Context) error
+		VerifyOTP(ctx context.Context, in *vo.VerifyInput) (vo.VerifyOTPOutput, error)
 		UpdatePasswordRegister(ctx context.Context) error
 	}
 

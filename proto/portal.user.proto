@@ -21,3 +21,18 @@ message RegisterUser
         SEND_OTP_ERRROR = 4;
     }
 }
+
+message VerifyOTP
+{
+    message Request
+    {
+        string verify_key = 1;
+        string verify_otp = 2;
+    }
+    message Reply
+    {
+        string token = 1;
+        int32 userId = 2;
+        string message = 3;
+    }
+}
