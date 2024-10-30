@@ -134,6 +134,53 @@ func (s *sUserAuth) VerifyOTP(ctx context.Context, in *vo.VerifyInput) (out vo.V
 	return out, err
 }
 
-func (s *sUserAuth) UpdatePasswordRegister(ctx context.Context) error {
-	return nil
+func (s *sUserAuth) UpdatePasswordRegister(ctx context.Context, token string, password string) (userID int, err error) {
+	// 1.check token already verified or not: user_verify table
+	infoOTP, err := s.repo.GetInfoOTP(ctx, token)
+	if err != nil {
+		return response.ErrCodeUserOtpNotExists, err
+	}
+	// check isVerified OK
+	if infoOTP.IsVerified.Int32 == 0 {
+		return response.ErrCodeUserOtpNotExists, fmt.Errorf("user OTP not exists")
+	}
+	// 2. check token is exists in user_base
+	// update user_base 
+	userBase := repos.AddUserBaseParams{}
+	userBase.UserAccount = infoOTP.VerifyKey
+	userSalt, err := crypto.GenerateSalt(16)
+	if err != nil {
+		return response.ErrCodeParamInvalid, err
+	}
+	userBase.UserSalt = userSalt
+	userBase.UserPassword = crypto.HashPassword(password, userSalt)
+	// add userBase to database: user_base
+	newUserBase, err := s.repo.AddUserBase(ctx, userBase)
+	if err != nil {
+		return response.ErrCodeParamInvalid, err
+	}
+	user_id, err := newUserBase.LastInsertId()
+	if err != nil {
+		return response.ErrCodeParamInvalid, err
+	}
+	// add user_id to user_info table
+	newUserInfo, err := s.repo.AddUserHaveUserId(ctx, repos.AddUserHaveUserIdParams{
+		UserID: uint64(user_id),
+		UserAccount: infoOTP.VerifyKey,
+		UserNickname: sql.NullString{String: infoOTP.VerifyKey, Valid: true},
+		UserAvatar: sql.NullString{String: "", Valid: true},
+		UserState: 1,
+		UserMobile: sql.NullString{String: "", Valid: true},
+		UserGender: sql.NullInt16{Int16: 0, Valid: true},
+		UserBirthday: sql.NullTime{Time: time.Time{}, Valid: false},
+		UserIsAuthentication: 1,
+	})
+	if err != nil {
+		return response.ErrCodeParamInvalid, err
+	}
+	user_id_info, err := newUserInfo.LastInsertId()
+	if err != nil {
+		return response.ErrCodeParamInvalid, err
+	}
+	return int(user_id_info), nil
 }

@@ -32,6 +32,13 @@ definitions:
         description: '@gotags: form:"hello"'
         type: string
     type: object
+  vo.UpdatePasswordRegisterInput:
+    properties:
+      user_password:
+        type: string
+      user_token:
+        type: string
+    type: object
   vo.VerifyInput:
     properties:
       verify_code:
@@ -53,6 +60,32 @@ info:
   title: Swagger GO Ecommerce API
   version: 1.0.0
 paths:
+  /auth/update_pass_register:
+    post:
+      consumes:
+      - application/json
+      description: When user verify OTP success and update password
+      parameters:
+      - description: payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/vo.UpdatePasswordRegisterInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.ResponseData'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.ErrorResponseData'
+      summary: auth user update password
+      tags:
+      - auth user management
   /auth/verify_account:
     post:
       consumes:

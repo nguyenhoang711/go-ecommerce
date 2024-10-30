@@ -27,6 +27,9 @@ func SuccessResponse(c *gin.Context, code int, message string, data interface{})
 }
 
 func ErrorResponse(c *gin.Context, code int, message string) {
+	if message == "" {
+		message = ErrMessageDict()(code)
+	}
 	c.JSON(http.StatusConflict, ResponseData{
 		Code:    code,
 		Message: message,

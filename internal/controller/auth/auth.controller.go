@@ -47,3 +47,25 @@ func (c *cUserAuth) VerifyOTP(ctx *gin.Context) {
 	}
 	response.SuccessResponse(ctx, response.CODE_OK, "Xác thực OTP thành công", result)
 }
+
+// @Summary auth user update password
+// @Description When user verify OTP success and update password
+// @Accept  json
+// @Produce  json
+// @Tags auth user management
+// @Param 	payload	body vo.UpdatePasswordRegisterInput true	"payload"
+// @Success		200	{object} 	response.ResponseData
+// @Failure		500	{object} 	response.ErrorResponseData
+// @Router /auth/update_pass_register [post]
+func (c *cUserAuth) UpdatePasswordRegister(ctx *gin.Context) {
+	var params vo.UpdatePasswordRegisterInput
+	if err := ctx.ShouldBindJSON(&params); err != nil {
+		response.ErrorResponse(ctx, response.CODE_BAD_REQUEST, response.BAD_REQUEST)
+		return
+	}
+	result, err := service.UserAuth().UpdatePasswordRegister(ctx, params.UserToken, params.UserPassword)
+	if err != nil {
+		response.ErrorResponse(ctx, response.ErrCodeUserOtpNotExists, err.Error())
+	}
+	response.SuccessResponse(ctx, response.CODE_OK, "Success", result)
+}

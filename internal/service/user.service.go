@@ -11,7 +11,7 @@ type (
 		Login(ctx context.Context) error
 		Register(ctx context.Context, in *vo.RegisterUser_Request) (int32, interface{}, error)
 		VerifyOTP(ctx context.Context, in *vo.VerifyInput) (vo.VerifyOTPOutput, error)
-		UpdatePasswordRegister(ctx context.Context) error
+		UpdatePasswordRegister(ctx context.Context, token string, password string) (userId int, err error)
 	}
 
 	IUserInfo interface {

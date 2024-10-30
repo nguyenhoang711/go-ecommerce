@@ -17,6 +17,46 @@
     },
     "host": "localhost:8002",
     "paths": {
+        "/auth/update_pass_register": {
+            "post": {
+                "description": "When user verify OTP success and update password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth user management"
+                ],
+                "summary": "auth user update password",
+                "parameters": [
+                    {
+                        "description": "payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/vo.UpdatePasswordRegisterInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.ResponseData"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.ErrorResponseData"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/verify_account": {
             "post": {
                 "description": "When user is registered send otp to email",
@@ -138,6 +178,17 @@
             "properties": {
                 "hello": {
                     "description": "@gotags: form:\"hello\"",
+                    "type": "string"
+                }
+            }
+        },
+        "vo.UpdatePasswordRegisterInput": {
+            "type": "object",
+            "properties": {
+                "user_password": {
+                    "type": "string"
+                },
+                "user_token": {
                     "type": "string"
                 }
             }

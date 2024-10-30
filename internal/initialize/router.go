@@ -22,6 +22,7 @@ func InitRouter() *gin.Engine {
 	{
 		authAPI.POST("/register", auth.UserAuth.Register)
 		authAPI.POST("/verify_account", auth.UserAuth.VerifyOTP)
+		authAPI.POST("/update_pass_register", auth.UserAuth.UpdatePasswordRegister)
 	}
 
 	return r
