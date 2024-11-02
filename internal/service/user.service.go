@@ -8,7 +8,7 @@ import (
 
 type (
 	IUserAuth interface {
-		Login(ctx context.Context) error
+		Login(ctx context.Context, in *vo.LoginInput) (codeResult int, out vo.LoginOutput, err error)
 		Register(ctx context.Context, in *vo.RegisterUser_Request) (int32, interface{}, error)
 		VerifyOTP(ctx context.Context, in *vo.VerifyInput) (vo.VerifyOTPOutput, error)
 		UpdatePasswordRegister(ctx context.Context, token string, password string) (userId int, err error)

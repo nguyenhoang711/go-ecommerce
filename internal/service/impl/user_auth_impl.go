@@ -3,6 +3,7 @@ package impl
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -32,8 +33,41 @@ func NewUserAuthImpl(r *repos.Queries) *sUserAuth {
 }
 
 // implement IUserAuth interface here
-func (s *sUserAuth) Login(ctx context.Context) error {
-	return nil
+func (s *sUserAuth) Login(ctx context.Context, in *vo.LoginInput) (codeResult int, out vo.LoginOutput, err error) {
+	// logic login
+	userBase, err := s.repo.GetOneUserInfo(ctx, in.UserAccount)
+	if err != nil {
+		return response.ErrCodeAuthFailed, out, err
+	}
+	// 2. check password
+	if !crypto.MatchHashPassword(userBase.UserPassword, in.UserPassword, userBase.UserSalt) {
+		return response.ErrCodeAuthFailed, out, fmt.Errorf("does not match password")
+	}
+	// 3. check two-factor authentication
+	// 4. update login time
+	s.repo.LoginUserBase(ctx, repos.LoginUserBaseParams{
+		UserLoginIp: sql.NullString{String: "127.0.0.1", Valid: true},
+		UserAccount: in.UserAccount,
+		UserPassword: in.UserPassword,
+	})
+	// 5. create UUID user to save as key for redis cache
+	subToken := utils.GenerateClientTokenUUID(int(userBase.UserID))
+
+	// 6. get user_info table
+	infoUser, err := s.repo.GetUser(ctx, uint64(userBase.UserID))
+	if err != nil {
+		return response.ErrCodeAuthFailed, out, fmt.Errorf("get info failed :: %v", err)
+	}
+	infoUserJSON, err := json.Marshal(infoUser)
+	if err != nil {
+		return response.ErrCodeAuthFailed, out, fmt.Errorf("convert to json failed :: %v", err)
+	}
+	// 7. save infoUserJSON
+	err = global.Rdb.Set(ctx, subToken, infoUserJSON, time.Duration(common.TIME_OTP_REGISTER) * time.Minute).Err()
+	if err != nil {
+		return response.ErrCodeAuthFailed, out, fmt.Errorf("caching failed:: %v", err)
+	}
+	return response.CODE_OK, out, err
 }
 
 func (s *sUserAuth) Register(ctx context.Context, in *vo.RegisterUser_Request) (int32, interface{}, error) {
