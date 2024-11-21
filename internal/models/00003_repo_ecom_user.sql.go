@@ -319,12 +319,18 @@ func (q *Queries) UpdatePassword(ctx context.Context, arg UpdatePasswordParams) 
 
 const updateUserStatusByUserId = `-- name: UpdateUserStatusByUserId :exec
 UPDATE ` + "`" + `pre_go_acc_user_9999` + "`" + `
-SET user_state = $2,
-    updated_at = $3
-WHERE user_id = $1
+SET user_state = ?,
+    updated_at = ?
+WHERE user_id = ?
 `
 
-func (q *Queries) UpdateUserStatusByUserId(ctx context.Context) error {
-	_, err := q.db.ExecContext(ctx, updateUserStatusByUserId)
+type UpdateUserStatusByUserIdParams struct {
+	UserState uint8
+	UpdatedAt sql.NullTime
+	UserID    uint64
+}
+
+func (q *Queries) UpdateUserStatusByUserId(ctx context.Context, arg UpdateUserStatusByUserIdParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserStatusByUserId, arg.UserState, arg.UpdatedAt, arg.UserID)
 	return err
 }
