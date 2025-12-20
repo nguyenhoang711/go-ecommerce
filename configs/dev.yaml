@@ -2,12 +2,13 @@ server:
   port: 8002
   mode: "test"
 mysql:
-  host: 127.0.0.1
-  port: 3306
+  host: localhost
+  port: 33336
   username: root
   # password: 123456
-  password: HaUINumber1
-  dbname: ecom_shop #shopdevgo
+  password: root1234
+  # dbname: ecom_shop #shopdevgo
+  dbname: shopdevgo #shopdevgo
   maxIdleConns: 10
   maxOpenConns: 50
   connMaxLifeTime: 3600
@@ -20,7 +21,7 @@ logger:
   compress: true
 redis:
   host: 127.0.0.1
-  port: 6378
+  port: 6379
   password:
   database: 0
   pool_size: 10

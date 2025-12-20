@@ -3,7 +3,7 @@ ENV ?= dev
 
 # these are the default values
 GOOSE_DRIVER ?= mysql
-GOOSE_DBSTRING ?= "root:123456@tcp(127.0.0.1:3306)/ecom_shop"
+GOOSE_DBSTRING ?= "root:root1234@tcp(127.0.0.1:33336)/shopdevgo"
 GOOSE_MIGRATION_DIR ?= sql/schema
 
 gen-proto:
@@ -37,7 +37,7 @@ create-migration:
 	@goose -dir=$(GOOSE_MIGRATION_DIR) create $(name) sql
 
 up-gen:
-	@GOOSE_DRIVER=$(GOOSE_DRIVER) GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_MIGRATION_DIR) up
+	@GOOSE_DRIVER=mysql GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_MIGRATION_DIR) up
 
 down-gen:
 	@GOOSE_DRIVER=$(GOOSE_DRIVER) GOOSE_DBSTRING=$(GOOSE_DBSTRING) goose -dir=$(GOOSE_MIGRATION_DIR) down

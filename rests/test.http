@@ -13,3 +13,13 @@ Content-Type: application/json
     "verify_purpose": "TEST_USER",
     "verify_type": 1
 }
+
+### send mail to java api
+POST http://localhost:8002/auth/register
+Content-Type: application/json
+
+{
+    "verify_key": "hoangndh@vivas.vn",
+    "verify_purpose": "TEST_USER",
+    "verify_type": 1
+}

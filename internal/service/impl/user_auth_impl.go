@@ -46,8 +46,8 @@ func (s *sUserAuth) Login(ctx context.Context, in *vo.LoginInput) (codeResult in
 	// 3. check two-factor authentication
 	// 4. update login time
 	s.repo.LoginUserBase(ctx, repos.LoginUserBaseParams{
-		UserLoginIp: sql.NullString{String: "127.0.0.1", Valid: true},
-		UserAccount: in.UserAccount,
+		UserLoginIp:  sql.NullString{String: "127.0.0.1", Valid: true},
+		UserAccount:  in.UserAccount,
 		UserPassword: in.UserPassword,
 	})
 	// 5. create UUID user to save as key for redis cache
@@ -63,7 +63,7 @@ func (s *sUserAuth) Login(ctx context.Context, in *vo.LoginInput) (codeResult in
 		return response.ErrCodeAuthFailed, out, fmt.Errorf("convert to json failed :: %v", err)
 	}
 	// 7. save infoUserJSON
-	err = global.Rdb.Set(ctx, subToken, infoUserJSON, time.Duration(common.TIME_OTP_REGISTER) * time.Minute).Err()
+	err = global.Rdb.Set(ctx, subToken, infoUserJSON, time.Duration(common.TIME_OTP_REGISTER)*time.Minute).Err()
 	if err != nil {
 		return response.ErrCodeAuthFailed, out, fmt.Errorf("caching failed:: %v", err)
 	}
@@ -97,7 +97,7 @@ func (s *sUserAuth) Register(ctx context.Context, in *vo.RegisterUser_Request) (
 		fmt.Println("Get Failed: ", err)
 		return int32(vo.RegisterUser_INVALID_OTP), nil, err
 	case otpFound != "":
-		return int32(vo.RegisterUser_OTP_NOT_EXISTS), otpFound, fmt.Errorf("OTP exists but not registered") 
+		return int32(vo.RegisterUser_OTP_NOT_EXISTS), otpFound, fmt.Errorf("OTP exists but not registered")
 	}
 	otpNew := random.GenerateSixDigitOtp()
 	if in.VerifyPurpose == "TEST_USER" {
@@ -105,22 +105,49 @@ func (s *sUserAuth) Register(ctx context.Context, in *vo.RegisterUser_Request) (
 	}
 	fmt.Printf("OTP is:: %d\n", otpNew)
 	// 5. save OTP in redis with expiration time
-	err = global.Rdb.SetEx(ctx, userKey, strconv.Itoa(otpNew), time.Duration(common.TIME_OTP_REGISTER) * time.Minute).Err()
+	err = global.Rdb.SetEx(ctx, userKey, strconv.Itoa(otpNew), time.Duration(common.TIME_OTP_REGISTER)*time.Minute).Err()
 	if err != nil {
 		return int32(vo.RegisterUser_INVALID_OTP), nil, err
 	}
 	// 6. send OTP
+	// switch in.VerifyType {
+	// case int32(common.EMAIL):
+	// 	err := sendto.SendTextEmailOtp([]string{in.VerifyKey}, common.HOST_EMAIL, strconv.Itoa(otpNew))
+	// 	if err != nil {
+	// 		return int32(vo.RegisterUser_SEND_OTP_ERRROR), nil, err
+	// 	}
+	// 	// 2. save OTP to MySQL
+	// 	result, err := s.repo.InsertOTPVerify(ctx, repos.InsertOTPVerifyParams{
+	// 		VerifyOtp:     strconv.Itoa(otpNew),
+	// 		VerifyType:    sql.NullInt32{Int32: 1, Valid: true},
+	// 		VerifyKey:     in.VerifyKey,
+	// 		VerifyKeyHash: hashKey,
+	// 	})
+	// 	if err != nil {
+	// 		return int32(vo.RegisterUser_SEND_OTP_ERRROR), nil, err
+	// 	}
+	// 	// 8. get last Id
+	// 	lastIdVerifyUser, err := result.LastInsertId()
+	// 	if err != nil {
+	// 		return int32(vo.RegisterUser_SEND_OTP_ERRROR), nil, err
+	// 	}
+	// 	global.Logger.Info("lastIdVerifyUser::", zap.String("lastId", strconv.Itoa(int(lastIdVerifyUser))))
+	// 	return int32(vo.RegisterUser_NO_ERROR), nil, nil
+	// case int32(common.MOBILE):
+	// 	return int32(vo.RegisterUser_NO_ERROR), nil, nil
+	// }
+
 	switch in.VerifyType {
 	case int32(common.EMAIL):
-		err := sendto.SendTextEmailOtp([]string{in.VerifyKey}, common.HOST_EMAIL, strconv.Itoa(otpNew))
+		err := sendto.SendEmailToJavaByAPI(strconv.Itoa(otpNew), in.VerifyKey, in.VerifyPurpose)
 		if err != nil {
 			return int32(vo.RegisterUser_SEND_OTP_ERRROR), nil, err
 		}
 		// 2. save OTP to MySQL
 		result, err := s.repo.InsertOTPVerify(ctx, repos.InsertOTPVerifyParams{
-			VerifyOtp: strconv.Itoa(otpNew),
-			VerifyType: sql.NullInt32{Int32: 1, Valid: true},
-			VerifyKey: in.VerifyKey,
+			VerifyOtp:     strconv.Itoa(otpNew),
+			VerifyType:    sql.NullInt32{Int32: 1, Valid: true},
+			VerifyKey:     in.VerifyKey,
 			VerifyKeyHash: hashKey,
 		})
 		if err != nil {
@@ -129,7 +156,7 @@ func (s *sUserAuth) Register(ctx context.Context, in *vo.RegisterUser_Request) (
 		// 8. get last Id
 		lastIdVerifyUser, err := result.LastInsertId()
 		if err != nil {
-			return int32(vo.RegisterUser_SEND_OTP_ERRROR), nil, err 
+			return int32(vo.RegisterUser_SEND_OTP_ERRROR), nil, err
 		}
 		global.Logger.Info("lastIdVerifyUser::", zap.String("lastId", strconv.Itoa(int(lastIdVerifyUser))))
 		return int32(vo.RegisterUser_NO_ERROR), nil, nil
@@ -179,7 +206,7 @@ func (s *sUserAuth) UpdatePasswordRegister(ctx context.Context, token string, pa
 		return response.ErrCodeUserOtpNotExists, fmt.Errorf("user OTP not exists")
 	}
 	// 2. check token is exists in user_base
-	// update user_base 
+	// update user_base
 	userBase := repos.AddUserBaseParams{}
 	userBase.UserAccount = infoOTP.VerifyKey
 	userSalt, err := crypto.GenerateSalt(16)
@@ -199,14 +226,14 @@ func (s *sUserAuth) UpdatePasswordRegister(ctx context.Context, token string, pa
 	}
 	// add user_id to user_info table
 	newUserInfo, err := s.repo.AddUserHaveUserId(ctx, repos.AddUserHaveUserIdParams{
-		UserID: uint64(user_id),
-		UserAccount: infoOTP.VerifyKey,
-		UserNickname: sql.NullString{String: infoOTP.VerifyKey, Valid: true},
-		UserAvatar: sql.NullString{String: "", Valid: true},
-		UserState: 1,
-		UserMobile: sql.NullString{String: "", Valid: true},
-		UserGender: sql.NullInt16{Int16: 0, Valid: true},
-		UserBirthday: sql.NullTime{Time: time.Time{}, Valid: false},
+		UserID:               uint64(user_id),
+		UserAccount:          infoOTP.VerifyKey,
+		UserNickname:         sql.NullString{String: infoOTP.VerifyKey, Valid: true},
+		UserAvatar:           sql.NullString{String: "", Valid: true},
+		UserState:            1,
+		UserMobile:           sql.NullString{String: "", Valid: true},
+		UserGender:           sql.NullInt16{Int16: 0, Valid: true},
+		UserBirthday:         sql.NullTime{Time: time.Time{}, Valid: false},
 		UserIsAuthentication: 1,
 	})
 	if err != nil {
