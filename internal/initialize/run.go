@@ -7,12 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Run() *gin.Engine{
+func Run() *gin.Engine {
 	env := os.Getenv("ENV")
 	if env == "" {
-        log.Fatal("ENV variable is not set")
+		log.Fatal("ENV variable is not set")
 		LoadConfig("local")
-    } else {
+	} else {
 		LoadConfig(env)
 	}
 	InitLogger()
@@ -20,6 +20,7 @@ func Run() *gin.Engine{
 	InitMysqlc()
 	InitRedis()
 	InitServiceInterface()
+	InitKafka()
 
 	r := InitRouter()
 
