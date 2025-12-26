@@ -15,10 +15,10 @@ import (
 	"github.com/devpenguin/go-ecommerce/internal/utils"
 	"github.com/devpenguin/go-ecommerce/internal/utils/crypto"
 	"github.com/devpenguin/go-ecommerce/internal/utils/random"
-	"github.com/devpenguin/go-ecommerce/internal/utils/sendto"
 	"github.com/devpenguin/go-ecommerce/internal/vo"
 	"github.com/devpenguin/go-ecommerce/pkg/response"
 	"github.com/redis/go-redis/v9"
+	"github.com/segmentio/kafka-go"
 	"go.uber.org/zap"
 )
 
@@ -139,10 +139,26 @@ func (s *sUserAuth) Register(ctx context.Context, in *vo.RegisterUser_Request) (
 
 	switch in.VerifyType {
 	case int32(common.EMAIL):
-		err := sendto.SendEmailToJavaByAPI(strconv.Itoa(otpNew), in.VerifyKey, in.VerifyPurpose)
+		// err := sendto.SendEmailToJavaByAPI(strconv.Itoa(otpNew), in.VerifyKey, in.VerifyPurpose)
+		// if err != nil {
+		// 	return int32(vo.RegisterUser_SEND_OTP_ERRROR), nil, err
+		// }
+		// send OTP via Kafka Java
+		body := make(map[string]interface{})
+		body["email"] = in.VerifyKey
+		body["otp"] = strconv.Itoa(otpNew)
+
+		bodyRequest, err := json.Marshal(body)
+		message := kafka.Message{
+			Key:   []byte("otp-auth"),
+			Value: bodyRequest,
+			Time:  time.Now(),
+		}
+		err = global.KafkaProducer.WriteMessages(ctx, message)
 		if err != nil {
 			return int32(vo.RegisterUser_SEND_OTP_ERRROR), nil, err
 		}
+
 		// 2. save OTP to MySQL
 		result, err := s.repo.InsertOTPVerify(ctx, repos.InsertOTPVerifyParams{
 			VerifyOtp:     strconv.Itoa(otpNew),
